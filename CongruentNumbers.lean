@@ -1,3 +1,5 @@
+import CongruentNumbers.Curve
+
 /-!
 # Congruent numbers
 
