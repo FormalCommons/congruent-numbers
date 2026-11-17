@@ -1,3 +1,5 @@
+import CongruentNumbers.Basic
+
 /-!
 # Congruent numbers
 
