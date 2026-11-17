@@ -48,6 +48,12 @@ theorem natCast_notMem_span_pow {p : ℕ} (hp : p.Prime) (hp2 : p ≠ 2) (q : �
 
 variable (E : WeierstrassCurve ℤ) (v : HeightOneSpectrum ℤ) {p : ℕ}
 
+/-- If `v = (p)` and `p` does not divide `E.Δ`, then `E.Δ ∉ v`: the good-reduction hypothesis of
+`isElliptic_integralModel_baseChange`. -/
+private lemma discr_notMem_of_hv (hv : v.asIdeal = Ideal.span {(p : ℤ)}) (hΔ : ¬ (p : ℤ) ∣ E.Δ) :
+    E.Δ ∉ v.asIdeal := by
+  rwa [hv, Ideal.mem_span_singleton]
+
 /-- **Reduction is injective on torsion**, over `ℚ`. Let `E` be a Weierstrass equation over `ℤ`
 and `p` an odd prime that does not divide its discriminant. Then reduction at the prime
 `v = (p)`, from `E(ℚ)` to the points of the reduced curve over the residue field `𝔽_p`, is
@@ -59,11 +65,11 @@ theorem injOn_reductionHom_torsion_rat
     (hp : p.Prime) (hp2 : p ≠ 2)
     (hv : v.asIdeal = Ideal.span {(p : ℤ)}) (hΔ : ¬ (p : ℤ) ∣ E.Δ) :
     haveI := E.isElliptic_integralModel_baseChange (K := ℚ) v
-      (by rwa [hv, Ideal.mem_span_singleton])
+      (discr_notMem_of_hv E v hv hΔ)
     Set.InjOn (Affine.Point.reductionHom (v.valuation ℚ) (W := (E.baseChange ℚ).toAffine))
       (AddCommGroup.torsion (E.baseChange ℚ).toAffine.Point) := by
   have := E.isElliptic_integralModel_baseChange (K := ℚ) v
-    (by rwa [hv, Ideal.mem_span_singleton])
+    (discr_notMem_of_hv E v hv hΔ)
   exact Affine.Point.injOn_reductionHom_torsion v
     (hv ▸ natCast_notMem_span_pow hp hp2)
 
@@ -81,7 +87,7 @@ theorem card_torsion_dvd_card_point_zmod (hp : p.Prime) (hp2 : p ≠ 2)
     (Ideal.prime_span_singleton_iff.mpr (Nat.prime_iff_prime_int.mp hp))
   have hv : v.asIdeal = Ideal.span {(p : ℤ)} := rfl
   have := E.isElliptic_integralModel_baseChange (K := ℚ) v
-    (by rwa [hv, Ideal.mem_span_singleton])
+    (discr_notMem_of_hv E v hv hΔ)
   rw [← E.card_point_reduction_baseChange v p hv]
   exact Affine.Point.card_torsion_dvd_card_reduction v
     (hv ▸ natCast_notMem_span_pow hp hp2)
