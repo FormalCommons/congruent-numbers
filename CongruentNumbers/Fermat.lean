@@ -1,17 +1,18 @@
 module
 
 public import CongruentNumbers.Basic
+public import Mathlib.NumberTheory.FLT.Four
 public import Mathlib.NumberTheory.PythagoreanTriples
 public import Mathlib.RingTheory.Int.Basic
 public import Mathlib.Tactic.LinearCombination
 
 /-!
-# Fermat's right triangle theorem: `1` is not congruent
+# Fermat's right triangle theorem: `1` and `2` are not congruent
 
-This file proves the first half of the milestone *Fermat's right triangle theorem* of the plan
+This file proves the milestone *Fermat's right triangle theorem* of the plan
 <https://github.com/FormalCommons/congruent-numbers-plan/blob/main/atlas/congruent-numbers.md>:
-no right triangle with integer sides has an area that is a perfect square, and `1` is not a
-congruent number.
+no right triangle with integer sides has an area that is a perfect square, `1` is not a
+congruent number, and `2` is not a congruent number.
 
 The proof is Conrad's infinite descent on `a ^ 2 + b ^ 2 = c ^ 2`, `a * b = 2 * d ^ 2`. We work with
 the equivalent condition `2 * a * b = e ^ 2` (take `e = 2 * d`). A solution in positive integers
@@ -23,6 +24,10 @@ pairwise coprime with product a square, so all four are squares: `m = x ^ 2`, `n
 hypotenuse `x` is again a solution, with `2 * ((u + v) / 2) * ((u - v) / 2) = y ^ 2` and
 `x ≤ m < c`.
 
+For `2`: if `a * b = 4` and `a ^ 2 + b ^ 2 = c ^ 2`, then `a ^ 4 + 2 ^ 4 = (a * c) ^ 2`. Writing
+`a = A / D` and `c = C / E` gives `(A * E) ^ 4 + (2 * D * E) ^ 4 = (A * C * D * E) ^ 2` in nonzero
+integers, which Mathlib's `not_fermat_42` rules out.
+
 ## Main results
 
 * `CongruentNumbers.int_mul_ne_two_mul_sq`: if `a ^ 2 + b ^ 2 = c ^ 2` with nonzero integers
@@ -30,10 +35,12 @@ hypotenuse `x` is again a solution, with `2 * ((u + v) / 2) * ((u - v) / 2) = y 
 * `CongruentNumbers.nat_mul_ne_two_mul_sq`: the same for positive natural numbers: no right
   triangle with positive integer sides has an area that is a perfect square.
 * `CongruentNumbers.not_isCongruent_one`: `1` is not congruent.
+* `CongruentNumbers.not_isCongruent_two`: `2` is not congruent.
+* `CongruentNumbers.fermat_right_triangle`: the milestone *Fermat's right triangle theorem*.
 
 ## References
 
-* [K. Conrad, *The congruent number problem*, Theorem 2.1][Conrad2008]
+* [K. Conrad, *The congruent number problem*, Theorem 2.1 and Appendix B][Conrad2008]
 -/
 
 public section
@@ -217,6 +224,36 @@ theorem not_isCongruent_one : ¬ IsCongruent 1 := by
         2 * (D : ℚ) ^ 2 := by
       rw [hA, hB]; linear_combination 2 * (D : ℚ) ^ 2 * hab
     exact_mod_cast this
+
+/-- `2` is not a congruent number: no right triangle with rational sides has area `2`.
+
+This is part of the milestone *Fermat's right triangle theorem*. -/
+theorem not_isCongruent_two : ¬ IsCongruent 2 := by
+  rintro ⟨a, b, c, ha, hb, hc, h, hab⟩
+  have hA : ((a.num : ℤ) : ℚ) = a * a.den := (Rat.mul_den_eq_num a).symm
+  have hC : ((c.num : ℤ) : ℚ) = c * c.den := (Rat.mul_den_eq_num c).symm
+  refine not_fermat_42 (a := a.num * c.den) (b := 2 * a.den * c.den)
+    (c := a.num * c.num * a.den * c.den) ?_ ?_ ?_
+  · exact mul_ne_zero (Rat.num_ne_zero.mpr ha.ne') (by positivity)
+  · positivity
+  · have : (((a.num : ℤ) : ℚ) * c.den) ^ 4 + (2 * (a.den : ℚ) * c.den) ^ 4 =
+        (((a.num : ℤ) : ℚ) * ((c.num : ℤ) : ℚ) * a.den * c.den) ^ 2 := by
+      rw [hA, hC]
+      linear_combination ((a.den : ℚ) ^ 4 * c.den ^ 4 * a ^ 2) * h -
+        (2 * (a.den : ℚ) ^ 4 * c.den ^ 4 * (4 + a * b)) * hab
+    exact_mod_cast this
+
+/-- **Fermat's right triangle theorem**: `1` is not a congruent number, that is, no right
+triangle with rational sides has area `1`; equivalently, no right triangle with positive integer
+sides has an area that is a perfect square. Moreover, `2` is not a congruent number.
+
+This is the milestone *Fermat's right triangle theorem*. -/
+theorem fermat_right_triangle :
+    ¬ IsCongruent 1 ∧
+      (∀ a b c d : ℕ, 0 < a → 0 < b → a ^ 2 + b ^ 2 = c ^ 2 → a * b ≠ 2 * d ^ 2) ∧
+      ¬ IsCongruent 2 :=
+  ⟨not_isCongruent_one, fun _ _ _ d ha hb h => nat_mul_ne_two_mul_sq ha hb h d,
+    not_isCongruent_two⟩
 
 end CongruentNumbers
 
