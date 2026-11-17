@@ -1,5 +1,7 @@
-import TauCeti.AlgebraicGeometry.EllipticCurve.Affine.Point.TorsionReduction
-import TauCeti.AlgebraicGeometry.EllipticCurve.IntegralReduction
+module
+
+public import TauCeti.AlgebraicGeometry.EllipticCurve.Affine.Point.TorsionReduction
+public import TauCeti.AlgebraicGeometry.EllipticCurve.IntegralReduction
 
 /-!
 # Reduction is injective on torsion, over `ℚ`
@@ -28,6 +30,8 @@ every prime `q` lies outside `u ^ (q - 1)`. This file checks that hypothesis for
 * [J. Silverman, *The Arithmetic of Elliptic Curves*], VII.3.1 and IV.6.
 -/
 
+public section
+
 open IsDedekindDomain WeierstrassCurve
 
 namespace CongruentNumbers
@@ -50,7 +54,7 @@ variable (E : WeierstrassCurve ℤ) (v : HeightOneSpectrum ℤ) {p : ℕ}
 
 /-- If `v = (p)` and `p` does not divide `E.Δ`, then `E.Δ ∉ v`: the good-reduction hypothesis of
 `isElliptic_integralModel_baseChange`. -/
-private lemma discr_notMem_of_hv (hv : v.asIdeal = Ideal.span {(p : ℤ)}) (hΔ : ¬ (p : ℤ) ∣ E.Δ) :
+theorem discr_notMem_of_hv (hv : v.asIdeal = Ideal.span {(p : ℤ)}) (hΔ : ¬ (p : ℤ) ∣ E.Δ) :
     E.Δ ∉ v.asIdeal := by
   rwa [hv, Ideal.mem_span_singleton]
 
