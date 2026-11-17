@@ -1,5 +1,6 @@
 import CongruentNumbers.Basic
 import CongruentNumbers.Curve
+import CongruentNumbers.Reduction
 import CongruentNumbers.Triangle
 
 /-!
