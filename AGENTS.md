@@ -24,8 +24,8 @@ succeed.
 - The library is under `CongruentNumbers/`, in the namespace `CongruentNumbers`.
   Use one file per topic, such as `CongruentNumbers/Basic.lean` for the
   definition and `CongruentNumbers/Torsion.lean` for the torsion of $E_n$.
-- `CongruentNumbers.lean` imports every file of the library. Add an import there
-  for each new file.
+- `lake build` builds every file under `CongruentNumbers/`. Do not edit
+  `CongruentNumbers.lean`.
 
 ## Rules
 

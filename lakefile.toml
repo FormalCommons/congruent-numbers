@@ -13,3 +13,6 @@ rev = "0642eae29e0a59ef798d04de325386445906e755"
 
 [[lean_lib]]
 name = "CongruentNumbers"
+# Build the root and every module under `CongruentNumbers/`, so that a new file
+# is built without an import in `CongruentNumbers.lean`.
+globs = ["CongruentNumbers.*"]
