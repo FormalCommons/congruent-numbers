@@ -43,11 +43,10 @@ section FiniteField
 variable {F : Type*} [Field F] [Fintype F]
 
 /-- A finite field with `#F ≡ 3 (mod 4)` does not have characteristic two. -/
-theorem ringChar_ne_two_of_card_mod_four_eq_three (hF : Fintype.card F % 4 = 3) :
+private theorem ringChar_ne_two_of_card_mod_four_eq_three (hF : Fintype.card F % 4 = 3) :
     ringChar F ≠ 2 := fun h ↦ by
-  have : IsSquare (-1 : F) := ⟨1, by rw [neg_one_eq_one_iff.mpr h]; ring⟩
-  rw [FiniteField.isSquare_neg_one_iff] at this
-  exact this hF
+  have := FiniteField.even_card_iff_char_two.mp h
+  omega
 
 /-- Over a finite field `F` with `#F ≡ 3 (mod 4)`, the equation `y² = x³ - n² x` of `E_n` has
 exactly `#F` affine solutions, for every `n`. -/
