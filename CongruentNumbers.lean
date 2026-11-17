@@ -2,7 +2,7 @@ import CongruentNumbers.Basic
 import CongruentNumbers.Curve
 import CongruentNumbers.FiniteField
 import CongruentNumbers.Reduction
-import CongruentNumbers.Torsion
+import CongruentNumbers.Triangle
 
 /-!
 # Congruent numbers
