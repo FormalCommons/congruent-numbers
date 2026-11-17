@@ -1,4 +1,5 @@
 import CongruentNumbers.Curve
+import CongruentNumbers.FiniteField
 
 /-!
 # Congruent numbers
