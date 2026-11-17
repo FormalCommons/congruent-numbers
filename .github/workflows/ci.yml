@@ -1,0 +1,29 @@
+name: ci
+
+on:
+  pull_request:
+  merge_group:
+  push:
+    branches: [main]
+
+# CI runs the build scripts of every pull request's branch, so it gets no
+# secrets and only read access.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - name: install elan
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/v4.2.4/elan-init.sh \
+            | sh -s -- -y --no-modify-path --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: fetch Mathlib's build cache
+        run: lake exe cache get
+      # --wfail fails the build on any warning, including a `sorry`.
+      - name: build
+        run: lake build --wfail

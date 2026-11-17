@@ -1,0 +1,15 @@
+name = "CongruentNumbers"
+defaultTargets = ["CongruentNumbers"]
+
+[leanOptions]
+autoImplicit = false
+
+# Tau Ceti, which brings Mathlib, at a fixed commit. Its own lake-manifest.json
+# pins Mathlib and the rest, and this project's lake-manifest.json records them.
+[[require]]
+name = "TauCeti"
+git = "https://github.com/TauCetiProject/TauCeti"
+rev = "0642eae29e0a59ef798d04de325386445906e755"
+
+[[lean_lib]]
+name = "CongruentNumbers"
