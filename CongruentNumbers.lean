@@ -1,3 +1,4 @@
+import CongruentNumbers.Curve
 import CongruentNumbers.Reduction
 
 /-!
